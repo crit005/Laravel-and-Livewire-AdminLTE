@@ -8,7 +8,7 @@
                 </div><!-- /.col -->
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('admin.dashboard.home')}}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Users</li>
                     </ol>
                 </div><!-- /.col -->
@@ -38,7 +38,17 @@
                         </button>
                     </div>
                     <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-end mb-2">
+                                <select name="row_perpage" id="row_perpage" wire:model='rowPerpage'>
+                                    <option value="2">2</option>
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="card-body">
+
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
@@ -51,7 +61,7 @@
                                 <tbody>
                                     @foreach ($users as $user)
                                     <tr>
-                                        <th scope="row">{{ (($page-1)*10)+$loop->iteration }}</th>
+                                        <th scope="row">{{ (($page-1)*$rowPerpage)+$loop->iteration }}</th>
                                         <td>{{$user->name}}</td>
                                         <td>{{$user->email}}</td>
                                         <td>
@@ -180,14 +190,14 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <h3>Are you sure to delete this user ?</h3>                                              
+                        <h3>Are you sure to delete this user ?</h3>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
                                 class="fa fa-times mr-1"></i>Cancel</button>
                         <button wire:click.prevent="deleteUser" type="button" class="btn btn-danger">
-                            <i class="fa fa-trash mr-1"></i>                            
-                            Yes    
+                            <i class="fa fa-trash mr-1"></i>
+                            Yes
                         </button>
                     </div>
                 </div>

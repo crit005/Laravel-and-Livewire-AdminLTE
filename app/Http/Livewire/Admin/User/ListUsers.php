@@ -16,6 +16,7 @@ class ListUsers extends Component
     public $showEditModal = false;
     public $user;
     public $userIdBegingRemoved;
+    public $rowPerpage = 10;
 
     public function addNew()
     {
@@ -87,7 +88,7 @@ class ListUsers extends Component
 
     public function render()
     {
-        $users = User::latest()->paginate(10);
+        $users = User::latest()->paginate($this->rowPerpage);
         // dd($this->page);
         return view('livewire.admin.user.list-users', ['users' => $users]);
     }
