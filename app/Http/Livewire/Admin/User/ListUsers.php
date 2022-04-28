@@ -2,21 +2,25 @@
 
 namespace App\Http\Livewire\Admin\User;
 
+use App\Http\Livewire\Admin\AdminComponent;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
-use Livewire\Component;
-use Livewire\WithPagination;
 
-class ListUsers extends Component
+class ListUsers extends AdminComponent
 {
-    use WithPagination;
-    protected $paginationTheme = 'bootstrap';
 
     public $state = [];
+
     public $showEditModal = false;
+
     public $user;
+
     public $userIdBegingRemoved;
-    public $rowPerpage = 10;
+
+    public function resetCurrentPage()
+    {
+        $this->resetPage();
+    }
 
     public function addNew()
     {
@@ -24,6 +28,7 @@ class ListUsers extends Component
         $this->state = [];
         $this->dispatchBrowserEvent('show-form');
     }
+
     public function createUser()
     {
         $validatedData = Validator::make($this->state, [
@@ -37,8 +42,11 @@ class ListUsers extends Component
         $validatedData['password'] = bcrypt($validatedData['password']);
 
         User::create($validatedData);
+
         $this->state = [];
+
         session()->flash('message', 'User Created Succesfully!');
+
         $this->dispatchBrowserEvent('hide-form', ['message' => 'User Created Succesfully!']);
     }
 
@@ -63,25 +71,33 @@ class ListUsers extends Component
         // encrypt password
         if (!empty($validatedData['password'])) {
             $validatedData['password'] = bcrypt($validatedData['password']);
-        }        
+        }
+
         $this->user->update($validatedData);
+
         $this->user = null;
+
         // User::where('id',$this->state['id'])->update($validatedData);
         $this->state = [];
+
         session()->flash('message', 'User Updated Succesfully!');
+
         $this->dispatchBrowserEvent('hide-form', ['message' => 'User Updated Succesfully!']);
     }
 
     public function confirmUserRemoval($userId)
     {
         $this->userIdBegingRemoved = $userId;
+
         $this->dispatchBrowserEvent('show-delete-modal');
     }
 
     public function deleteUser()
     {
         $user = User::findOrFail($this->userIdBegingRemoved);
+
         $user->delete();
+
         // User::where('id',$this->userIdBegingRemoved)->delete();
         $this->dispatchBrowserEvent('hide-delete-modal', ['message' => 'User ID: ' . $this->userIdBegingRemoved . ', has delete successfully!']);
     }

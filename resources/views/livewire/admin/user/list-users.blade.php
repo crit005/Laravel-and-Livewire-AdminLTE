@@ -39,12 +39,31 @@
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <div class="d-flex justify-content-end mb-2">
-                                <select name="row_perpage" id="row_perpage" wire:model='rowPerpage'>
-                                    <option value="2">2</option>
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                </select>
+                            <div class="d-flex flex-row-reverse">
+                                <div class="p-2">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">
+                                                <i class="far fa-file-alt"></i>
+                                            </label>
+                                        </div>
+                                        <select 
+                                        {{-- wire:change='resetCurrentPage'  --}}
+                                        {{-- wire:click="resetCurrentPage($event.target.value)" --}}
+                                        onchange="resetCurrentPage()"
+                                        name="row_perpage" id="row_perpage"
+                                        wire:model.lazy='rowPerpage'
+                                            class="custom-select">
+                                            <option value="{{$users->total()}}">--All--</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="500">500</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="card-body">
@@ -235,6 +254,9 @@
             //     @this.state =[];
             // });
        
+        function resetCurrentPage(){
+            @this.resetCurrentPage();
+        }
         
     </script>
 

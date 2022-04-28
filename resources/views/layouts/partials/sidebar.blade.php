@@ -47,9 +47,9 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#"
-                        class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                    <a href="{{route('admin.apointments')}}"
+                        class="nav-link {{ request()->is('admin/appointments')? 'active':''}}">
+                        <i class="nav-icon fas fa-calendar"></i>
                         <p>
                             Appointments
                         </p>
@@ -57,8 +57,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{route('admin.users')}}"
-                        class="nav-link {{ request()->is('admin/users')? 'active':''}}">
+                    <a href="{{route('admin.users')}}" class="nav-link {{ request()->is('admin/users')? 'active':''}}">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
                             Users
@@ -67,8 +66,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#"
-                        class="nav-link">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Setting
@@ -77,14 +75,13 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="#"
-                        class="nav-link">
+                    <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Logout
                         </p>
                     </a>
-                </li>                
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
