@@ -37,21 +37,9 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>                                
-
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="appointmentDate">Appointment Date:</label>
-                                            <div class="input-group mb-3">
-                                                <x-datepicker wire:model.defer="state.date" id="appointmentDate"/>
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text"><i class="far fa-calendar"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Date:</label>
                                             <div wire:ignore class="input-group date" id="appointmentDate"
@@ -65,22 +53,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div> --}}
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="appointmentTime">Appointment End Time:</label>
-                                            <div class="input-group mb-3">
-                                                <x-timepicker wire:model.defer="state.time"
-                                                    id="appointmentTime"/>
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
-
-                                    {{-- <div class="col-md-6">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Appointment Time:</label>
                                             <div wire:ignore class="input-group date" id="appointmentTime"
@@ -96,7 +70,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div> --}}
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
@@ -107,22 +81,7 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="status">Status:</label>
-                                            <select class="form-control" wire:model.defer="state.status">
-                                                <option value="">Select Status</option>                                            
-                                                <option value="SCHEDULED">Scheduled</option> 
-                                                <option value="CLOSED">Closle</option> 
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>                            
-
+                            </div>
                             <div class="card-footer">
                                 <button type="button" class="btn btn-secondary"><i class="fa fa-times mr-1"></i>
                                     Cancel</button>
@@ -141,24 +100,23 @@
         // console.log("{{$date}}");
     $(document).ready(function(){
         
-        /*$('#appointmentDate').datetimepicker({
+        $('#appointmentDate').datetimepicker({
             format:'L',
             // format:'MM-DD-YYYY',
             defaultDate: "{{array_key_exists('date',$state)?$state['date']:''}}",
             // defaultDate: "11/1/2013",
 
-        });*/
-
-        /*$('#appointmentTime').datetimepicker({
+        });
+        $('#appointmentTime').datetimepicker({
             format:'LT',
             defaultDate: "{{array_key_exists('time',$state)?$state['time']:''}}",
-        });*/
+        });
 
-        /*$('#appointmentTime').on('change.datetimepicker',e=>{
+        $('#appointmentTime').on('change.datetimepicker',e=>{
             @this.setTime($('#appointmentTimeInput').val()); 
-        });*/
+        });
 
-        /*$('#appointmentDate').on('change.datetimepicker',function(e){
+        $('#appointmentDate').on('change.datetimepicker',function(e){
             // call function component 
             //@this.setDate($('#appointmentDateInput').val());                
             // or
@@ -168,7 +126,7 @@
             eval(date).set('state.date', $('#appointmentDateInput').val());                              
             // -------------------------------------------------
             
-        });*/
+        });
         
     });       
 
