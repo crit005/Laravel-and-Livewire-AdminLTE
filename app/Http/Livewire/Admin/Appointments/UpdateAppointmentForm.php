@@ -7,12 +7,21 @@ use App\Models\Client;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 
-class CreateAppointmentForm extends Component
+class UpdateAppointmentForm extends Component
 {
     public $state = [];
-    public $date = '04/27/2022';
+    public $appointment;
 
-    public function createAppointment()
+    public function mount(Appointment $appointment)
+    {
+        // dd($appointment);
+        $this->appointment = $appointment;
+        $this->state = $appointment->toArray();
+        // dd($this->state);
+        
+    }
+
+    public function updateAppointment()
     {
         // $this->state['status'] = 'opent';
         // $this->state['time'] = date("H:i:s", strtotime($this->state['time']));
@@ -32,31 +41,24 @@ class CreateAppointmentForm extends Component
             ],
             [ // attributes
                 'client_id' => 'Client',
-                'time'=>'Appointment Time',
+                'time' => 'Appointment Time',
                 'date' => 'Appointment Date',
-                'status'=>'Status'
+                'status' => 'Status'
             ]
         )->validate();
 
         // dd($this->state);
 
-        Appointment::create($this->state);
-
-        $this->dispatchBrowserEvent('alert', ['message' => 'Appointment created successfully!']);
+        $this->appointment->update($this->state);
+        
+        $this->dispatchBrowserEvent('alert', ['message' => 'Appointment Update successfully!']);
     }
-    public function setDate($date)
-    {
-        $this->state['date'] = $date;
-    }
-    public function setTime($time)
-    {
-        $this->state['time'] = $time;
-    }
+    
 
     public function render()
     {
         $clients = Client::all();
-        return view('livewire.admin.appointments.create-appointment-form', [
+        return view('livewire.admin.appointments.update-appointment-form', [
             'clients' => $clients,
         ]);
     }

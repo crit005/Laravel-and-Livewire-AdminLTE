@@ -19,10 +19,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
-                    <form wire:submit.prevent="createAppointment" autocomplete="off">
+                    <form wire:submit.prevent="updateAppointment" autocomplete="off">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Add New Appointment</h3>
+                                <h3 class="card-title">Update Appointment</h3>
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -63,21 +63,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Date:</label>
-                                            <div wire:ignore class="input-group date" id="appointmentDate"
-                                                data-target-input="nearest" data-appointmentdate="@this">
-                                                <input wire:model.lazy="state.date" type="text"
-                                                    class="form-control datetimepicker-input"
-                                                    data-target="#appointmentDate" id="appointmentDateInput">
-                                                <div class="input-group-append" data-target="#appointmentDate"
-                                                    data-toggle="datetimepicker">
-                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
+                                    
 
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -98,30 +84,17 @@
                                         </div>
                                     </div>
 
-                                    {{-- <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Appointment Time:</label>
-                                            <div wire:ignore class="input-group date" id="appointmentTime"
-                                                data-target-input="nearest">
-                                                <input type="text" class="form-control datetimepicker-input"
-                                                    data-target="#appointmentTime" wire:model.defer="state.time"
-                                                    id="appointmentTimeInput">
-                                                <div class="input-group-append" data-target="#appointmentTime"
-                                                    data-toggle="datetimepicker">
-                                                    <div class="input-group-text">
-                                                        <i class="far fa-clock"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
+                                    
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group" wire:ignore>
                                             <label for="note">Note:</label>
-                                            <textarea data-note="@this" wire:model='state.note' class="form-control"
-                                                id="note"></textarea>
+                                            <textarea data-note="@this" wire:model.defer='state.note' class="form-control"
+                                                id="note">
+                                                {{-- html formate content with {{!! $value !!}} --}}
+                                            {!! $state['note'] !!}
+                                            </textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -161,44 +134,7 @@
         </div>
 
     </div>
-    @push('js')
-    <script>
-        // console.log("{{$date}}");
-    $(document).ready(function(){
-        
-        /*$('#appointmentDate').datetimepicker({
-            format:'L',
-            // format:'MM-DD-YYYY',
-            defaultDate: "{{array_key_exists('date',$state)?$state['date']:''}}",
-            // defaultDate: "11/1/2013",
-
-        });*/
-
-        /*$('#appointmentTime').datetimepicker({
-            format:'LT',
-            defaultDate: "{{array_key_exists('time',$state)?$state['time']:''}}",
-        });*/
-
-        /*$('#appointmentTime').on('change.datetimepicker',e=>{
-            @this.setTime($('#appointmentTimeInput').val()); 
-        });*/
-
-        /*$('#appointmentDate').on('change.datetimepicker',function(e){
-            // call function component 
-            //@this.setDate($('#appointmentDateInput').val());                
-            // or
-            // direct set date from java script
-            // -------------------------------------------------
-            let date = $(this).data('appointmentdate');                
-            eval(date).set('state.date', $('#appointmentDateInput').val());                              
-            // -------------------------------------------------
-            
-        });*/
-        
-    });       
-
-    </script>
-
+    @push('js')    
     <script>
         ClassicEditor
         .create( document.querySelector( '#note' ) )

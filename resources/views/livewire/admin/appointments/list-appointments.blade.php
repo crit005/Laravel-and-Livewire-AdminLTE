@@ -34,11 +34,11 @@
                 <div class="col-lg-12">
                     <div class="d-flex justify-content-end mb-2">
                         <a href="{{route('admin.appointments.create')}}">
-                        <button class="btn btn-primary">
-                            <i class="fa fa-plus-circle mr-2"></i>Add New Appintment
-                        </button>
+                            <button class="btn btn-primary">
+                                <i class="fa fa-plus-circle mr-2"></i>Add New Appintment
+                            </button>
                         </a>
-                        
+
                     </div>
                     <div class="card">
                         <div class="card-header">
@@ -54,14 +54,13 @@
                                         <select {{-- wire:change='resetCurrentPage' --}} {{--
                                             wire:click="resetCurrentPage($event.target.value)" --}}
                                             onchange="resetCurrentPage()" name="row_perpage" id="row_perpage"
-                                            wire:model.lazy='rowPerpage' class="custom-select">                                            
+                                            wire:model.lazy='rowPerpage' class="custom-select">
                                             <option value="{{$appointments->total()}}">--All--</option>
                                             <option value="10">10</option>
                                             <option value="20">20</option>
                                             <option value="50">50</option>
                                             <option value="100">100</option>
                                             <option value="500">500</option>
-                                            
                                         </select>
                                     </div>
                                 </div>
@@ -83,15 +82,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                    @foreach ($appointments as $appointment)
                                     <tr>
-                                        <th scope="row">{{ (($page-1)*$rowPerpage)}}</th>
-                                        <td>name</td>
-                                        <td>date</td>
-                                        <td>time</td>
-                                        <td>status</td>
+                                        <th scope="row">{{ (($page-1)*$rowPerpage)+$loop->iteration}}</th>
+                                        <td>{{$appointment->client->name}}</td>
+                                        {{-- <td>{{$appointment->date->toFormattedDate()}}</td>
+                                        <td>{{$appointment->time->toFormattedTime()}}</td> --}}
+                                        <td>{{$appointment->date}}</td>
+                                        <td>{{$appointment->time}}</td>
                                         <td>
-                                            <a href="">
+
+                                            {{-- @if ($appointment->status === 'SCHEDULED')
+                                            <span class="badge badge-primary">SCHEDULED</span>
+                                            @elseif($appointment->status === 'CLOSED')
+                                            <span class="badge badge-success">CLOSED</span>
+                                            @endif --}}
+                                            {{-- or --}}
+                                            {{-- <span
+                                                class="badge badge-{{$appointment->StatusBadge}}">{{$appointment->status}}</span>
+                                            --}}
+                                            {{-- or --}}
+                                            <span
+                                                class="badge badge-{{$appointment->status_badge}}">{{$appointment->status}}</span>
+
+                                        </td>
+                                        <td>
+                                            <a href="{{route('admin.appointments.edit',$appointment)}}">
                                                 <i class="fa fa-edit mr-2"></i>
                                             </a>
                                             <a href="">
@@ -99,6 +115,7 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    @endforeach
 
                                 </tbody>
                             </table>
@@ -117,5 +134,12 @@
 
     </div>
     <!-- /.content -->
+    @push('js')
+    <script>
+        function resetCurrentPage(){
+        @this.resetCurrentPage();
+    }
+    </script>
+    @endpush
 
 </div>

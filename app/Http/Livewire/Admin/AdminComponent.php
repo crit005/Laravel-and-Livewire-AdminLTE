@@ -11,5 +11,6 @@ class AdminComponent extends Component
     
     protected $paginationTheme = 'bootstrap';
 
-    public $rowPerpage = 10;
+    public $rowPerpage = 10;   
+    
 }
