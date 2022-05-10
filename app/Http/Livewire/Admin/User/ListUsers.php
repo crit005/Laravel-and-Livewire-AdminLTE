@@ -17,6 +17,8 @@ class ListUsers extends AdminComponent
 
     public $userIdBegingRemoved;
 
+    public $searchTerm = null;
+
     public function resetCurrentPage()
     {
         $this->resetPage();
@@ -104,7 +106,10 @@ class ListUsers extends AdminComponent
 
     public function render()
     {
-        $users = User::latest()->paginate($this->rowPerpage);
+        $users = User::query()
+        ->where('name','like','%'.$this->searchTerm.'%')
+        ->orWhere('email','like','%'.$this->searchTerm.'%')
+        ->latest()->paginate($this->rowPerpage);
         // dd($this->page);
         return view('livewire.admin.user.list-users', ['users' => $users]);
     }

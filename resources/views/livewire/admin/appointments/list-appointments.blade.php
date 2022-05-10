@@ -32,12 +32,34 @@
             @endif
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="d-flex justify-content-end mb-2">
+                    <div class="d-flex justify-content-between mb-2">
                         <a href="{{route('admin.appointments.create')}}">
                             <button class="btn btn-primary">
                                 <i class="fa fa-plus-circle mr-2"></i>Add New Appintment
                             </button>
                         </a>
+
+
+                        <div class="btn-group">
+                            <button wire:click='filterAppointmentsByStatus()' type="button" class="btn 
+                            {{is_null($status)? 'btn-secondary': 'btn-default'}} ">
+                                <span class="mr-1">All</span>
+                                <span class="badge badge-pill badge-info">{{$appointmentsCount}}</span>
+                            </button>
+
+                            <button wire:click='filterAppointmentsByStatus("scheduled")' type="button"
+                                class="btn {{$status=='scheduled'? 'btn-secondary': 'btn-default'}} ">
+                                <span class="mr-1">Scheduled</span>
+                                <span class="badge badge-pill badge-primary">{{$scheduledAppointmentsCount}}</span>
+                            </button>
+
+                            <button wire:click='filterAppointmentsByStatus("closed")' type="button"
+                                class="btn {{$status=='closed'? 'btn-secondary': 'btn-default'}} ">
+                                <span class="mr-1">Closed</span>
+                                <span class="badge badge-pill badge-success">{{$closedAppointmentsCount}}</span>
+                            </button>
+                        </div>
+
 
                     </div>
                     <div class="card">
@@ -55,7 +77,7 @@
                                             wire:click="resetCurrentPage($event.target.value)" --}}
                                             onchange="resetCurrentPage()" name="row_perpage" id="row_perpage"
                                             wire:model.lazy='rowPerpage' class="custom-select">
-                                            <option value="{{$appointments->total()}}">--All--</option>
+                                            <option value="{{$appointmentsCount}}">--All--</option>
                                             <option value="10">10</option>
                                             <option value="20">20</option>
                                             <option value="50">50</option>
@@ -110,7 +132,8 @@
                                             <a href="{{route('admin.appointments.edit',$appointment)}}">
                                                 <i class="fa fa-edit mr-2"></i>
                                             </a>
-                                            <a href="">
+                                            <a href=""
+                                                wire:click.prevent='confirmAppointmentRemoveal({{$appointment->id}})'>
                                                 <i class="fa fa-trash text-danger"></i>
                                             </a>
                                         </td>
@@ -134,12 +157,6 @@
 
     </div>
     <!-- /.content -->
-    @push('js')
-    <script>
-        function resetCurrentPage(){
-        @this.resetCurrentPage();
-    }
-    </script>
-    @endpush
+    <x-confirmation-alert />
 
 </div>

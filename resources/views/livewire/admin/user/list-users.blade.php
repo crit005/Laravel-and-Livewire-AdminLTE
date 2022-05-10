@@ -32,10 +32,11 @@
             @endif
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="d-flex justify-content-end mb-2">
+                    <div class="d-flex justify-content-between mb-2">
                         <button wire:click='addNew' class="btn btn-primary">
                             <i class="fa fa-plus-circle mr-2"></i>Add New User
                         </button>
+                        <x-search-input wire:model='searchTerm' target='searchTerm'></x-search-input>
                     </div>
                     <div class="card">
                         <div class="card-header">
@@ -47,13 +48,10 @@
                                                 <i class="far fa-file-alt"></i>
                                             </label>
                                         </div>
-                                        <select 
-                                        {{-- wire:change='resetCurrentPage'  --}}
-                                        {{-- wire:click="resetCurrentPage($event.target.value)" --}}
-                                        onchange="resetCurrentPage()"
-                                        name="row_perpage" id="row_perpage"
-                                        wire:model.lazy='rowPerpage'
-                                            class="custom-select">
+                                        <select {{-- wire:change='resetCurrentPage' --}} {{--
+                                            wire:click="resetCurrentPage($event.target.value)" --}}
+                                            onchange="resetCurrentPage()" name="row_perpage" id="row_perpage"
+                                            wire:model.lazy='rowPerpage' class="custom-select">
                                             <option value="{{$users->total()}}">--All--</option>
                                             <option value="10">10</option>
                                             <option value="20">20</option>
@@ -74,15 +72,17 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Email</th>
+                                        <th scope="col">Register Date</th>
                                         <th scope="col">Option</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $user)
+                                    @forelse ($users as $user)
                                     <tr>
                                         <th scope="row">{{ (($page-1)*$rowPerpage)+$loop->iteration }}</th>
                                         <td>{{$user->name}}</td>
                                         <td>{{$user->email}}</td>
+                                        <td>{{$user->created_at}}</td>
                                         <td>
                                             <a href="" wire:click.prevent="edit({{$user}})">
                                                 <i class="fa fa-edit mr-2"></i>
@@ -92,7 +92,15 @@
                                             </a>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <img src="{{asset('images/undraw_void_-3-ggu.svg')}}" alt="search not found"
+                                                width="150">
+                                            <p>No Result Fround</p>
+                                        </td>
+                                    </tr>
+                                    @endforelse
 
                                 </tbody>
                             </table>
