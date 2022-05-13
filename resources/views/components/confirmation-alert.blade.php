@@ -36,5 +36,13 @@
             'success'
             )
     });
+
+    window.addEventListener('updated',event=>{
+        Swal.fire(
+            'Updated!',
+            event.detail.message,
+            'success'
+            )
+    });
 </script>
 @endpush

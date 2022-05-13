@@ -1,4 +1,5 @@
 <div>
+    <x-loading-indicator/>
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
@@ -80,7 +81,14 @@
                                     @forelse ($users as $user)
                                     <tr>
                                         <th scope="row">{{ (($page-1)*$rowPerpage)+$loop->iteration }}</th>
-                                        <td>{{$user->name}}</td>
+                                        <td>
+                                            {{-- <img src="{{Storage::disk('avatars')->url($user->avatar)}}"
+                                                style="width: 50px; height: 50px;" alt=""
+                                                class="img img-circle img-thumbnail"> --}}
+                                            <img src="{{$user->avatarUrl}}" style="width: 50px; height: 50px;" alt=""
+                                                class="img img-circle img-thumbnail">
+                                            {{$user->name}}
+                                        </td>
                                         <td>{{$user->email}}</td>
                                         <td>{{$user->created_at}}</td>
                                         <td>
@@ -183,6 +191,56 @@
                                 @enderror
                             </div>
 
+                            <div class="form-group">
+                                <label for="profilePhoto">Profile Photo</label>
+                                {{-- <div>
+                                    @if ($photo)
+                                    <img src="{{$photo->temporaryUrl()}}" style="width: 50px; height: 50px;"
+                                        class="img img-circle img-thumbnail mb-3" alt="">
+                                    @else
+                                    <img src="{{$state['avatar_url']?? asset('noimage.png')}}"
+                                        style="width: 50px; height: 50px;" class="img img-circle img-thumbnail mb-3"
+                                        alt="">
+                                    @endif
+                                </div> --}}
+
+                                <div x-data="{ isUploading: false, progress: 0 }"
+                                    x-on:livewire-upload-start="isUploading = true"
+                                    x-on:livewire-upload-finish="isUploading = false; progress =0"
+                                    x-on:livewire-upload-error="isUploading = false"
+                                    x-on:livewire-upload-progress="progress = $event.detail.progress">
+                                    <div class="custom-file">
+                                        <input wire:model='photo' type="file" class="custom-file-input"
+                                            id="profilePhoto">
+                                        <label class="custom-file-label" for="customFile">
+                                            @if ($photo)
+                                            {{$photo->getClientOriginalName()}}
+                                            @else
+                                            Choose Image
+                                            @endif
+                                        </label>
+                                    </div>
+
+                                    <div x-show.transition="isUploading" class="progress progress-sm mt-2 rounded">
+                                        <div class="progress-bar bg-primary progress-bar-striped" role="progressbar"
+                                            x-bind:aria-valuenow="`width: ${progress}%`" aria-valuemin="0"
+                                            aria-valuemax="100" x-bind:style="`width: ${progress}%`">
+                                            {{-- <span class="sr-only">40% Complete (success)</span> --}}
+                                            <span x-text="`${progress}%`"></span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    @if ($photo)
+                                    <img src="{{$photo->temporaryUrl()}}" class="img img-thumbnail m-2" alt="">
+                                    @else
+                                    <img src="{{$state['avatar_url']?? asset('noimage.png')}}"
+                                        class="img img-thumbnail m-2" alt="">
+                                    @endif
+                                </div>
+                            </div>
+
 
                         </div>
                         <div class="modal-footer">
@@ -231,7 +289,7 @@
             </div>
         </div>
         {{-- End Confirm delete --}}
-    </div>
+    </div>    
     <!-- /.content -->
     <script>
         $(document).ready(function(){
@@ -240,8 +298,7 @@
                 "progressBar":true,
                 "closeButton": true,
                 "timeOut": "3000",
-            }          
-                
+            } 
         });
         window.addEventListener('show-form',event=>{
             $('#form').modal({backdrop: 'static', keyboard: false});

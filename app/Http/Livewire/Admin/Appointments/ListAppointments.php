@@ -12,6 +12,57 @@ class ListAppointments extends AdminComponent
 
     public $appointmentIdBeingRemoved = null;
     public $status = null;
+
+    public $selectedRows = [];
+    public $selectPageRows = false;
+
+    public function updatedSelectPageRows($value) // execute after $selectPageRows change
+    {
+        // dd($value);
+        if ($value) {
+            $this->selectedRows = $this->appointments->pluck('id')->map(function ($id) {
+                return (string)$id;
+            })->toArray();
+        } else {
+            // $this->selectedRows = [];
+            $this->reset('selectedRows','selectPageRows');
+        }
+        // dd($this->selectedRows);
+    }
+
+    public function deleteSelectedRows()
+    {
+        // dd($this->selectedRows);
+        Appointment::whereIn('id',$this->selectedRows)->delete();
+        $this->reset('selectedRows','selectPageRows');
+        $this->dispatchBrowserEvent('deleted',['message'=>'All selected appointments got deleted.']);
+        
+    }
+
+    public function markAllAsScheduled()
+    {
+        Appointment::whereIn('id',$this->selectedRows)->update(['status'=>'SCHEDULED']);
+        $this->reset('selectedRows','selectPageRows');
+        $this->dispatchBrowserEvent('updated',['message'=>'Appointments marked as scheduled.']);
+    }
+
+    public function markAllAsClosed()
+    {
+        Appointment::whereIn('id',$this->selectedRows)->update(['status'=>'CLOSED']);
+        $this->reset('selectedRows','selectPageRows');
+        $this->dispatchBrowserEvent('updated',['message'=>'Appointments marked as closed.']);
+    }
+
+    public function getAppointmentsProperty()
+    {
+        return Appointment::with('client')
+            ->when($this->status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->latest()
+            ->paginate($this->rowPerpage);
+    }
+
     public function resetCurrentPage()
     {
         $this->resetPage();
@@ -38,12 +89,7 @@ class ListAppointments extends AdminComponent
 
     public function render()
     {
-        $appointments = Appointment::with('client')
-            ->when($this->status, function ($query, $status) {
-                return $query->where('status', $status);
-            })
-            ->latest()
-            ->paginate($this->rowPerpage);
+        $appointments = $this->appointments;
 
         $appointmentsCrount = Appointment::count();
         $scheduledAppointmentsCrount = Appointment::where('status', 'scheduled')->count();
