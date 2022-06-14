@@ -7,8 +7,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
-use function PHPUnit\Framework\isNull;
 
 class ListUsers extends AdminComponent
 {
@@ -26,7 +27,7 @@ class ListUsers extends AdminComponent
     public $searchTerm = null;
 
     public $photo;
-    
+
     public function resetCurrentPage()
     {
         $this->resetPage();
@@ -34,7 +35,7 @@ class ListUsers extends AdminComponent
 
     public function addNew()
     {
-        $this->reset(['state','showEditModal','user','userIdBegingRemoved','searchTerm','photo']);
+        $this->reset(['state', 'showEditModal', 'user', 'userIdBegingRemoved', 'searchTerm', 'photo']);
         $this->showEditModal = false;
         // $this->state = [];        
         $this->dispatchBrowserEvent('show-form');
@@ -70,12 +71,29 @@ class ListUsers extends AdminComponent
     public function edit(User $user)
     {
         // $this->reset();
-        $this->reset(['state','showEditModal','user','userIdBegingRemoved','searchTerm','photo']);
+        $this->reset(['state', 'showEditModal', 'user', 'userIdBegingRemoved', 'searchTerm', 'photo']);
         $this->showEditModal = true;
         $this->user = $user;
         $this->state = $user->toArray();
         // dd($this->state);
         $this->dispatchBrowserEvent('show-form');
+    }
+
+    public function changeRole(User $user, $role)
+    {
+        if (Validator::make(['role' => $role], [
+            // 'role' => 'required|in:admin,user',
+            'role' => [
+                'required',
+                Rule::in([User::ROLE_ADMIN, User::ROLE_USER]),
+            ],
+        ])->validate()) {
+
+            $user->update(['role' => $role]);
+            $this->dispatchBrowserEvent('updated', ['message' => "Role changed to " . Str::of($role)->upper() . " successfully."]);
+        } else {
+            $this->dispatchBrowserEvent('updated', ['message' => "Role changed to " . Str::of($role)->upper() . " false."]);
+        }
     }
 
     public function updateUser()
@@ -94,7 +112,7 @@ class ListUsers extends AdminComponent
 
         if ($this->photo) {
             // delete old photo befor update
-            if (!isNull($this->user->avatar)) {
+            if (!is_null($this->user->avatar)) {
                 Storage::disk('avatars')->delete($this->user->avatar);
             }
 
@@ -132,7 +150,7 @@ class ListUsers extends AdminComponent
         // User::where('id',$this->userIdBegingRemoved)->delete();
         $this->dispatchBrowserEvent('hide-delete-modal', ['message' => 'User ID: ' . $this->userIdBegingRemoved . ', has delete successfully!']);
     }
-    
+
 
     public function render()
     {

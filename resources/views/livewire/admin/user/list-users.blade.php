@@ -74,6 +74,7 @@
                                         <th scope="col">Name</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Register Date</th>
+                                        <th scope="col">Role</th>
                                         <th scope="col">Option</th>
                                     </tr>
                                 </thead>
@@ -90,7 +91,15 @@
                                             {{$user->name}}
                                         </td>
                                         <td>{{$user->email}}</td>
-                                        <td>{{$user->created_at}}</td>
+                                        <td>{{$user->created_at->toFormattedDate()}}</td>
+                                        <td>
+                                            <select class="form-control" 
+                                                wire:change='changeRole({{$user}},$event.target.value)'>
+                                                <option value="admin" {{$user->role ==='admin' ? 'selected' : ''}}>ADMIN</option>
+                                                <option value="user"  {{$user->role ==='user' ? 'selected' : ''}}>USER</option>
+                                                <option value="auther"  {{$user->role ==='auther' ? 'selected' : ''}}>AUTHER</option>
+                                            </select>
+                                        </td>
                                         <td>
                                             <a href="" wire:click.prevent="edit({{$user}})">
                                                 <i class="fa fa-edit mr-2"></i>
@@ -313,6 +322,10 @@
         });
         window.addEventListener('hide-delete-modal',event=>{
             $('#confirmDelete').modal('hide');
+            toastr.success(event.detail.message,'Success!');
+        });
+
+        window.addEventListener('updated',event=>{
             toastr.success(event.detail.message,'Success!');
         });
             // $('#form').on('show.bs.modal', function (e) {                

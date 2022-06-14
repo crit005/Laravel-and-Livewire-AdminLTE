@@ -11,6 +11,8 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER = 'user';
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -23,6 +25,7 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
+        'role'
     ];
 
     /**
@@ -47,13 +50,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends  =[
+    protected $appends  = [
         'avatar_url'
     ];
 
+    public function isAdmin()
+    {
+        if ($this->role === 'admin') return true;
+        return false;
+    }
+
     public function getAvatarUrlAttribute()
     {
-        if($this->avatar && Storage::disk('avatars')->exists($this->avatar)){
+        if ($this->avatar && Storage::disk('avatars')->exists($this->avatar)) {
             return Storage::disk('avatars')->url($this->avatar);
         }
 
